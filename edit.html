@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>生成你的祝福</title>
+    <link rel="stylesheet" href="./css/reset.css">
+    <link rel="stylesheet" href="./css/main.css">
+</head>
+<body>
+    <section class="editMain">
+        <img id="createBg" class="createBg" src="./images/canvasImg.png" alt="">
+        <textarea class="conText" onblur="createCanvas()"></textarea>
+        <input class="name" type="text">
+        <a class="createBtn" href="javascript:void(0)"><img src="./images/createBtn.png" alt=""></a>
+        <!--画布-->
+        <canvas id="main" height="667" width="375" style="border:1px solid #d3d3d3;"></canvas>
+
+    </section>
+<section class="saveImg">
+
+</section>
+</body>
+<script src="./js/jquery.min.js"></script>
+<script>
+
+    $(function(){
+        createCanvas()
+        var widthC = $('.createBg').css('width');
+        var heightC = $('.createBg').css('height');
+        document.getElementById('main').width = parseInt(widthC);
+        document.getElementById('main').height = parseInt(heightC);
+        $('.createBtn').on('touchend','',function(){
+            saveImageInfo();
+        })
+
+    })
+    function createCanvas(){
+
+        //获取画布对象
+        var mainCtx = document.getElementById('main').getContext("2d");
+        var maxWidth = mainCtx.width;
+        var maxHeight = mainCtx.height;
+        console.log(mainCtx)
+        mainCtx.clearRect(0,0,1000,1000);
+        //获取图片的实际路径
+        var starImg = new Image();
+        starImg.src=$('#createBg').attr('src');
+        console.log(starImg)
+        //合成
+        starImg.onload=function(){
+            //先把图片绘制在这里
+            mainCtx.drawImage(starImg,0,0,parseInt($('.createBg').css('width')),parseInt($('.createBg').css('height')));
+            var value=$('.conText').val();
+
+            //读取用户的文本
+            if(value){
+                //设置用户文本的大小字体等属性
+                mainCtx.font = "small-caps bold 18px STXinwei";
+                //设置用户文本填充颜色
+                mainCtx.fillStyle = "black";
+                //绘制文字
+
+                var text_array=value.split("\n");
+                $.each(text_array,function(i,v){
+                    console.log(v)
+                    mainCtx.fillText(v,108,335);
+                })
+
+                //设置时间文本的大小字体属性
+                mainCtx.font = "small-caps bold 16px STXinwei";
+                //绘制时间
+//                    mainCtx.fillText(date,326,447);
+            }
+
+        };
+
+    };
+    //通过id获取canvas对象
+    function getCanvasContext(id){
+        return document.getElementById(id).getContext("2d");
+    };
+    //将画布生成图片
+    function saveImageInfo() {
+        var mycanvas = document.getElementById("main");
+        var image = mycanvas.toDataURL("image/jpg");
+        var w=window.open('imgShow.html?src='+image,'image from canvas');
+        setTimeout(function(){
+            var w=window.open('imgShow.html?src='+image,'image from canvas');
+//            w.document.write("<img src='"+image+"' alt='from canvas'/><a href='javascript:void(0)' onclick='saveAsLocalImage()'>保存图片</a>");
+        },300)//            $('.saveImg').append("<img src='"+image+"' alt='from canvas'/><a href='javascript:void(0)' onclick='saveAsLocalImage()'>保存图片</a>").show();
+
+    }
+</script>
+</html>
